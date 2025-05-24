@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book Search - Descubra sua próxima leitura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">📚</span>
+                    </div>
+                    <h1
+                        class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Book Search</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#inicio"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Início</a>
+                    <a href="#recursos"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Recursos</a>
+                    <a href="#como-funciona"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Como Funciona</a>
+                    <a href="#contato"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contato</a>
+                </nav>
+                
+                <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+                    <div class="w-6 h-6 flex flex-col justify-center items-center space-y-1">
+                        <span class="block w-4 h-0.5 bg-gray-600"></span>
+                        <span class="block w-4 h-0.5 bg-gray-600"></span>
+                        <span class="block w-4 h-0.5 bg-gray-600"></span>
+                    </div>
+                </button>
+            </div>
+            
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-100">
+                <nav class="flex flex-col space-y-2 pt-4">
+                    <a href="#inicio" class="text-gray-700 hover:text-blue-600 py-2">Início</a>
+                    <a href="#recursos" class="text-gray-700 hover:text-blue-600 py-2">Recursos</a>
+                    <a href="#como-funciona" class="text-gray-700 hover:text-blue-600 py-2">Como Funciona</a>
+                    <a href="#contato" class="text-gray-700 hover:text-blue-600 py-2">Contato</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+
+    <section id="inicio" class="container mx-auto px-4 sm:px-6 py-12 lg:py-20">
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div class="flex-1 text-center lg:text-left animate-fade-in-up">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                    Descubra, salve e explore
+                    <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">livros com
+                        facilidade</span>
+                </h2>
+                <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
+                    O <span class="text-blue-600 font-semibold">Book Search</span> é a sua plataforma completa para
+                    buscar livros, receber recomendações personalizadas, aplicar filtros avançados e salvar seus
+                    favoritos. Tudo isso integrado à poderosa API do Google Books.
+                </p>
+                    <a href="#"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+                        Comece agora
+                    </a>
+            </div>
+            <div class="flex-1 w-full max-w-md lg:max-w-lg">
+                <div class="relative">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur-xl opacity-30 animate-pulse">
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        alt="Biblioteca com livros" class="relative w-full h-auto rounded-2xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="recursos" class="container mx-auto px-4 sm:px-6 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Recursos Incríveis</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Descubra tudo o que nossa plataforma pode fazer por você
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div
+                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div
+                    class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-2xl">🔍</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Busca Inteligente</h3>
+                <p class="text-gray-600 leading-relaxed">Encontre livros por título, autor, ISBN ou até mesmo por
+                    trechos. Nossa busca avançada entende o que você procura.</p>
+            </div>
+
+            <div
+                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div
+                    class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-2xl">💾</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Lista de Favoritos</h3>
+                <p class="text-gray-600 leading-relaxed">Salve seus livros preferidos, crie listas personalizadas e
+                    nunca perca uma recomendação importante.</p>
+            </div>
+
+            <div
+                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div
+                    class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-2xl">🔧</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Filtros Avançados</h3>
+                <p class="text-gray-600 leading-relaxed">Filtre por gênero, ano de publicação, idioma, avaliação e muito
+                    mais para encontrar exatamente o que procura.</p>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="como-funciona" class="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Como Funciona</h2>
+                <p class="text-xl text-blue-100 max-w-2xl mx-auto">Três passos simples para descobrir sua próxima
+                    leitura favorita</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center group">
+                    <div
+                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">1️⃣</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Busque</h3>
+                    <p class="text-blue-100">Digite o nome do livro, autor ou qualquer palavra-chave relacionada ao que
+                        você procura.</p>
+                </div>
+                <div class="text-center group">
+                    <div
+                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">2️⃣</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Explore</h3>
+                    <p class="text-blue-100">Navegue pelos resultados, use filtros e veja recomendações personalizadas
+                        para você.</p>
+                </div>
+                <div class="text-center group">
+                    <div
+                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-3xl">3️⃣</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Salve</h3>
+                    <p class="text-blue-100">Adicione à sua lista de favoritos e acompanhe seu progresso de leitura.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <section class="bg-gradient-to-r from-gray-900 to-gray-800 py-16">
+        <div class="container mx-auto px-4 sm:px-6 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Pronto para descobrir sua próxima leitura?</h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Junte-se a milhares de leitores que já transformaram
+                sua experiência de descoberta de livros</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+                    Acessar agora
+                </a>
+            </div>
+        </div>
+    </section>
+
+    
+    <footer id="contato" class="bg-white py-12">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">📚</span>
+                        </div>
+                        <h3
+                            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            Book Search</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4 max-w-md">Sua plataforma completa para descobrir, salvar e explorar o
+                        mundo dos livros com a tecnologia mais avançada.</p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors">📘</a>
+                        <a href="#"
+                            class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors">📱</a>
+                        <a href="#"
+                            class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors">💬</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-4">Recursos</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:text-blue-600 transition-colors">Busca Avançada</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition-colors">Recomendações</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition-colors">Listas Favoritas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-4">Suporte</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:text-blue-600 transition-colors">Central de Ajuda</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition-colors">Contato</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition-colors">API</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 pt-8 text-center text-gray-500">
+                <p>© 2024 Book Search. Feito com ❤️ usando Tailwind CSS e Google Books API. Todos os direitos
+                    reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.classList.add('bg-white/90');
+            } else {
+                header.classList.remove('bg-white/90');
+            }
+        });
+    </script>
+</body>
+
+</html>
