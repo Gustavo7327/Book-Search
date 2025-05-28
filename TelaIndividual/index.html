@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR"  class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Search - Detalhes do Livro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fonte Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Sticky no container da capa */
+    #book-cover-container {
+      position: sticky;
+      top: 1rem;
+      z-index: 10;
+      width: fit-content;
+    }
+
+    /* Em telas pequenas remove sticky e ajusta a imagem */
+    @media (max-width: 767px) {
+      #book-cover-container {
+        position: static; /* remove sticky */
+        width: 100%; /* ocupa toda largura */
+        margin-bottom: 1rem; /* espaço abaixo */
+      }
+
+      #book-cover {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-500">
+
+ 
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+
+      <!-- Bloco da Capa -->
+      <div id="book-cover-container" class="col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow p-[10px] flex flex-col items-center w-fit">
+        <img id="book-cover" class="w-72 h-auto rounded-lg shadow object-cover" src="" alt="Capa do livro" onerror="this.src='https://via.placeholder.com/150x220?text=Sem+Capa'">
+      </div>
+
+      <!-- Bloco principal -->
+      <div class="col-span-2 space-y-6">
+        <!-- Título e autores -->
+        <div class="pb-4 border-b border-gray-300 dark:border-gray-700 mb-6">
+          <h2 id="book-title" class="text-2xl font-bold mb-1">Título</h2>
+          <p id="book-authors" class="text-sm italic text-gray-600 dark:text-gray-400 mb-2"></p>
+          <div id="categories" class="flex flex-wrap gap-2 text-xs font-medium text-blue-700 dark:text-blue-300"></div>
+        </div>
+
+        <!-- Sinopse -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+          <h3 class="text-lg font-semibold mb-2">Sinopse</h3>
+          <p id="book-description" class="text-xs leading-relaxed text-gray-800 dark:text-gray-200">
+            Carregando descrição...
+          </p>
+        </div>
+
+        <!-- Detalhes da publicação -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+          <h3 class="text-lg font-semibold mb-4">Informações do Livro</h3>
+          <div class="text-xs grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Editora</p>
+              <p id="publisher" class="text-gray-800 dark:text-gray-100"></p>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">ISBN</p>
+              <p id="isbn" class="text-gray-800 dark:text-gray-100"></p>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Páginas</p>
+              <p id="page-count" class="text-gray-800 dark:text-gray-100"></p>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Idioma</p>
+              <p id="language" class="text-gray-800 dark:text-gray-100"></p>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Publicado em</p>
+              <p id="published-date" class="text-gray-800 dark:text-gray-100"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const volumeId = params.get("id");
+
+    if (!volumeId) {
+      alert("Livro não encontrado.");
+      throw new Error("Volume ID não informado.");
+    }
+
+    fetch(`https://www.googleapis.com/books/v1/volumes/${volumeId}`)
+      .then(res => res.json())
+      .then(data => {
+        const info = data.volumeInfo;
+
+        document.getElementById("book-title").textContent = info.title || "Título não disponível";
+
+        // Colocar "by" antes dos autores
+        const authors = info.authors?.join(", ") || "Autor desconhecido";
+        document.getElementById("book-authors").textContent = authors ? `by ${authors}` : "";
+
+        document.getElementById("book-cover").src = info.imageLinks?.thumbnail || "https://via.placeholder.com/150";
+
+        document.getElementById("book-description").innerHTML = info.description || "Descrição indisponível";
+
+        document.getElementById("publisher").textContent = info.publisher || "Desconhecida";
+        document.getElementById("published-date").textContent = info.publishedDate || "Desconhecida";
+        document.getElementById("page-count").textContent = info.pageCount || "?";
+        document.getElementById("isbn").textContent = info.industryIdentifiers?.[0]?.identifier || "Indisponível";
+        document.getElementById("language").textContent = info.language?.toUpperCase() || "Desconhecido";
+
+        const categoriesEl = document.getElementById("categories");
+        categoriesEl.innerHTML = "";
+        if (info.categories) {
+          info.categories.forEach(cat => {
+            const span = document.createElement("span");
+            span.className = "bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full";
+            span.textContent = cat;
+            categoriesEl.appendChild(span);
+          });
+        } else {
+          const span = document.createElement("span");
+          span.textContent = "Não categorizado";
+          categoriesEl.appendChild(span);
+        }
+      })
+      .catch(err => {
+        console.error("Erro ao buscar dados do livro:", err);
+      });
+  </script>
+</body>
+</html>
