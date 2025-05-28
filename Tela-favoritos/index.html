@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Favoritos - Livraria Digital</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link para o CSS -->
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">Livraria Digital</a>
+            
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Buscar livros, autores...">
+                <button class="search-btn">🔍</button>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Categorias</a></li>
+                <li><a href="#">Minha Conta</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="page-header">
+            <a href="#" class="back-btn">← Voltar</a>
+            <h1 class="page-title">Meus Favoritos</h1>
+        </div>
+
+        <div class="favorites-container">
+            <div class="favorites-header">
+                <span class="favorites-count">8 livros salvos</span>
+                <button class="sort-btn">Ordenar por título ↕</button>
+            </div>
+
+            <div class="books-grid" id="booksGrid">
+                <!-- Livros serão inseridos aqui via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script> <!-- Link para o JS -->
+</body>
+</html>
