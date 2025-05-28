@@ -4,14 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Livros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#03805E',
+                        'primary-dark': '#02684d',
+                        'primary-light': '#04a67c',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen">
+<body class="font-sans bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-primary text-xl font-bold">BookSearch</span>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-primary focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex md:items-center md:space-x-8">
+                     <a href="#" class="text-gray-600 hover:text-primary transition-colors">Home</a>
+                    <a href="#" class="text-primary font-medium border-b-2 border-primary px-1">Catálogo</a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">Favoritos</a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sobre</a>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-2 px-2 pt-2">
+                    <a href="#" class="bg-primary text-white block px-3 py-2 rounded-md">Início</a>
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Explorar</a>
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Favoritos</a>
+                    <a href="#" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Sobre</a>
+                    <button class="bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded-md transition-colors">
+                        Entrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">📚 Catálogo de Livros</h1>
-            <p class="text-gray-600">Descubra novos livros com a API do Google Books</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Catálogo de Livros</h1>
+            <p class="text-gray-600 text-primary">Descubra novos livros com a API do Google Books</p>
         </div>
 
         <!-- Search and Filter Section -->
@@ -26,7 +86,7 @@
                         type="text" 
                         id="searchInput" 
                         placeholder="Digite o título do livro ou nome do autor..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     >
                 </div>
 
@@ -37,7 +97,7 @@
                     </label>
                     <select 
                         id="genreFilter" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     >
                         <option value="">Todos os gêneros</option>
                         <option value="fiction">Ficção</option>
@@ -57,7 +117,7 @@
                 <div class="md:w-32 flex items-end">
                     <button 
                         id="searchBtn" 
-                        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                        class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     >
                         Buscar
                     </button>
@@ -67,14 +127,14 @@
 
         <!-- Loading Indicator -->
         <div id="loading" class="hidden text-center py-8">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             <p class="text-gray-600 mt-2">Carregando livros...</p>
         </div>
 
         <!-- Results Info -->
         <div id="resultsInfo" class="hidden mb-4">
             <p class="text-gray-600 text-sm">
-                Encontrados <span id="resultCount" class="font-semibold text-purple-600">0</span> resultados
+                Encontrados <span id="resultCount" class="font-semibold text-primary">0</span> resultados
             </p>
         </div>
 
@@ -87,7 +147,7 @@
         <div id="loadMoreContainer" class="hidden text-center">
             <button 
                 id="loadMoreBtn" 
-                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                class="bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
                 Carregar mais livros
             </button>
@@ -101,227 +161,6 @@
         </div>
     </div>
 
-    <script>
-        class BooksCatalog {
-            constructor() {
-                this.apiKey = ''; // Deixe vazio para usar sem API key (com limitações)
-                this.baseUrl = 'https://www.googleapis.com/books/v1/volumes';
-                this.currentQuery = '';
-                this.currentGenre = '';
-                this.startIndex = 0;
-                this.maxResults = 12;
-                this.totalItems = 0;
-                
-                this.initializeElements();
-                this.attachEventListeners();
-                this.loadInitialBooks();
-            }
-
-            initializeElements() {
-                this.searchInput = document.getElementById('searchInput');
-                this.genreFilter = document.getElementById('genreFilter');
-                this.searchBtn = document.getElementById('searchBtn');
-                this.loading = document.getElementById('loading');
-                this.resultsInfo = document.getElementById('resultsInfo');
-                this.resultCount = document.getElementById('resultCount');
-                this.booksGrid = document.getElementById('booksGrid');
-                this.loadMoreContainer = document.getElementById('loadMoreContainer');
-                this.loadMoreBtn = document.getElementById('loadMoreBtn');
-                this.noResults = document.getElementById('noResults');
-            }
-
-            attachEventListeners() {
-                this.searchBtn.addEventListener('click', () => this.performSearch());
-                this.searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') this.performSearch();
-                });
-                this.genreFilter.addEventListener('change', () => this.performSearch());
-                this.loadMoreBtn.addEventListener('click', () => this.loadMoreBooks());
-            }
-
-            async loadInitialBooks() {
-                this.currentQuery = 'programming'; // Query inicial
-                await this.searchBooks(true);
-            }
-
-            async performSearch() {
-                const query = this.searchInput.value.trim();
-                const genre = this.genreFilter.value;
-
-                if (!query && !genre) {
-                    alert('Por favor, digite um termo de pesquisa ou selecione um gênero.');
-                    return;
-                }
-
-                this.currentQuery = query || 'bestsellers';
-                this.currentGenre = genre;
-                this.startIndex = 0;
-                
-                await this.searchBooks(true);
-            }
-
-            async searchBooks(resetResults = false) {
-                this.showLoading();
-                
-                if (resetResults) {
-                    this.booksGrid.innerHTML = '';
-                    this.hideElements([this.resultsInfo, this.loadMoreContainer, this.noResults]);
-                }
-
-                try {
-                    let searchQuery = this.currentQuery;
-                    
-                    // Adiciona filtro de gênero se selecionado
-                    if (this.currentGenre) {
-                        searchQuery += `+subject:${this.currentGenre}`;
-                    }
-
-                    const url = `${this.baseUrl}?q=${encodeURIComponent(searchQuery)}&startIndex=${this.startIndex}&maxResults=${this.maxResults}&orderBy=relevance`;
-                    
-                    const response = await fetch(url);
-                    const data = await response.json();
-
-                    this.hideLoading();
-
-                    if (data.items && data.items.length > 0) {
-                        this.totalItems = data.totalItems || 0;
-                        this.displayBooks(data.items, resetResults);
-                        this.showResultsInfo();
-                        this.updateLoadMoreButton();
-                    } else {
-                        if (resetResults) {
-                            this.showNoResults();
-                        }
-                    }
-                } catch (error) {
-                    console.error('Erro ao buscar livros:', error);
-                    this.hideLoading();
-                    alert('Erro ao buscar livros. Tente novamente.');
-                }
-            }
-
-            displayBooks(books, resetResults = false) {
-                if (!resetResults) {
-                    // Append new books
-                } else {
-                    this.booksGrid.innerHTML = '';
-                }
-
-                books.forEach(book => {
-                    const bookCard = this.createBookCard(book);
-                    this.booksGrid.appendChild(bookCard);
-                });
-            }
-
-            createBookCard(book) {
-                const info = book.volumeInfo;
-                const imageUrl = info.imageLinks?.thumbnail || 'https://via.placeholder.com/128x192/e2e8f0/64748b?text=Sem+Capa';
-                const title = info.title || 'Título não disponível';
-                const authors = info.authors ? info.authors.join(', ') : 'Autor não informado';
-                const publishedDate = info.publishedDate ? new Date(info.publishedDate).getFullYear() : 'Data não informada';
-                const description = info.description ? this.truncateText(info.description, 120) : 'Descrição não disponível';
-                const pageCount = info.pageCount || 'N/A';
-                const categories = info.categories ? info.categories.slice(0, 2).join(', ') : 'Categoria não informada';
-
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden';
-                
-                card.innerHTML = `
-                    <div class="relative">
-                        <img 
-                            src="${imageUrl}" 
-                            alt="${title}"
-                            class="w-full h-64 object-cover"
-                            onerror="this.src='https://via.placeholder.com/200x300/e2e8f0/64748b?text=Sem+Capa'"
-                        >
-                        <div class="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 rounded-full text-xs">
-                            ${pageCount} pág.
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-gray-800 mb-2 line-clamp-2" title="${title}">
-                            ${title}
-                        </h3>
-                        <p class="text-purple-600 font-medium mb-1">${authors}</p>
-                        <p class="text-gray-500 text-sm mb-2">${publishedDate}</p>
-                        <div class="mb-3">
-                            <span class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
-                                ${categories}
-                            </span>
-                        </div>
-                        <p class="text-gray-600 text-sm leading-relaxed">${description}</p>
-                        ${info.previewLink ? `
-                            <div class="mt-4">
-                                <a 
-                                    href="${info.previewLink}" 
-                                    target="_blank" 
-                                    class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
-                                >
-                                    Ver prévia
-                                </a>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-
-                return card;
-            }
-
-            async loadMoreBooks() {
-                this.startIndex += this.maxResults;
-                await this.searchBooks(false);
-            }
-
-            updateLoadMoreButton() {
-                const hasMoreResults = (this.startIndex + this.maxResults) < this.totalItems;
-                
-                if (hasMoreResults) {
-                    this.loadMoreContainer.classList.remove('hidden');
-                } else {
-                    this.loadMoreContainer.classList.add('hidden');
-                }
-            }
-
-            showResultsInfo() {
-                this.resultCount.textContent = this.totalItems.toLocaleString('pt-BR');
-                this.resultsInfo.classList.remove('hidden');
-            }
-
-            showLoading() {
-                this.loading.classList.remove('hidden');
-            }
-
-            hideLoading() {
-                this.loading.classList.add('hidden');
-            }
-
-            showNoResults() {
-                this.noResults.classList.remove('hidden');
-            }
-
-            hideElements(elements) {
-                elements.forEach(element => element.classList.add('hidden'));
-            }
-
-            truncateText(text, maxLength) {
-                if (text.length <= maxLength) return text;
-                return text.substring(0, maxLength).trim() + '...';
-            }
-        }
-
-        // Initialize the catalog when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new BooksCatalog();
-        });
-    </script>
-
-    <style>
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
+    <script src="script.js"></script>
 </body>
 </html>
