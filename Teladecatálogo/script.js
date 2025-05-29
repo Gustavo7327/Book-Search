@@ -121,7 +121,7 @@ class BooksCatalog {
 
     createBookCard(book) {
         const info = book.volumeInfo;
-        const imageUrl = info.imageLinks?.thumbnail || 'https://via.placeholder.com/128x192/e2e8f0/64748b?text=Sem+Capa';
+        const imageUrl = info.imageLinks?.thumbnail || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQjJ5mHArWKZohio_f2pwq1MmrqC0_T3TYug&s';
         const title = info.title || 'Título não disponível';
         const authors = info.authors ? info.authors.join(', ') : 'Autor não informado';
         const publishedDate = info.publishedDate ? new Date(info.publishedDate).getFullYear() : 'Data não informada';
@@ -158,13 +158,7 @@ class BooksCatalog {
                 <p class="text-gray-600 text-sm leading-relaxed">${description}</p>
                 ${info.previewLink ? `
                     <div class="mt-4">
-                        <a 
-                            href="${info.previewLink}" 
-                            target="_blank" 
-                            class="inline-block bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200 transform hover:scale-105"
-                        >
-                            Ver prévia
-                        </a>
+                        <a href="teste.html?id=${book.id}" class="inline-block bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200 transform hover:scale-105">Ver mais informações</a>
                     </div>
                 ` : ''}
             </div>
