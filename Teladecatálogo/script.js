@@ -158,7 +158,7 @@ class BooksCatalog {
                 <p class="text-gray-600 text-sm leading-relaxed">${description}</p>
                 ${info.previewLink ? `
                     <div class="mt-4">
-                        <a href="teste.html?id=${book.id}" class="inline-block bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200 transform hover:scale-105">Ver mais informações</a>
+                        <a href="../TelaIndividual/index.html?id=${book.id}" class="inline-block bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200 transform hover:scale-105">Ver mais informações</a>
                     </div>
                 ` : ''}
             </div>

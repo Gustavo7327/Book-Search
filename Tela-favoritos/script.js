@@ -3,6 +3,7 @@ let favoriteBooks = [];
 let filteredBooks = [];
 let currentSearchTerm = '';
 let isSearchActive = false;
+let loadingBooks = false;
 
 // Elementos DOM
 const searchInput = document.getElementById('searchInput');
@@ -14,41 +15,87 @@ const favoritesCount = document.getElementById('favoritesCount');
 const sortBtn = document.getElementById('sortBtn');
 
 // Função para carregar favoritos do localStorage (agora compatível com o Código 1)
-function loadFavorites() {
+async function loadFavorites() {
     try {
+        console.log('Iniciando carregamento de favoritos...');
         favoriteBooks = [];
+        loadingBooks = true;
+        
+        // Mostra indicador de carregamento
+        if (booksGrid) {
+            booksGrid.innerHTML = `
+                <div class="loading-state">
+                    <div class="empty-icon">⏳</div>
+                    <h3>Carregando seus livros favoritos...</h3>
+                    <p>Aguarde um momento.</p>
+                </div>
+            `;
+        }
+        
+        // Array para armazenar as promessas de busca
+        const fetchPromises = [];
         
         // Percorre todas as chaves do localStorage procurando por favoritos
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key && key.startsWith('favorite-') && localStorage.getItem(key) === 'true') {
                 const volumeId = key.replace('favorite-', '');
+                console.log('Encontrado favorito:', volumeId);
                 
-                // Busca os dados do livro na API do Google Books
-                fetchBookData(volumeId);
+                // Adiciona a promessa de busca ao array
+                fetchPromises.push(fetchBookData(volumeId));
             }
         }
         
+        console.log(`Encontrados ${fetchPromises.length} favoritos para carregar`);
+        
+        // Aguarda todas as buscas serem concluídas
+        if (fetchPromises.length > 0) {
+            await Promise.all(fetchPromises);
+        }
+        
+        loadingBooks = false;
+        filteredBooks = [...favoriteBooks];
+        
         console.log('Favoritos carregados:', favoriteBooks);
+        
+        // Renderiza os livros após carregar todos
+        renderBooks();
+        updateCount();
+        
     } catch (error) {
         console.error('Erro ao carregar favoritos do localStorage:', error);
         favoriteBooks = [];
         filteredBooks = [];
+        loadingBooks = false;
+        renderBooks();
+        updateCount();
     }
 }
 
 // Função para buscar dados do livro na API
 async function fetchBookData(volumeId) {
     try {
+        console.log('Buscando dados do livro:', volumeId);
         const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${volumeId}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         const info = data.volumeInfo;
+        
+        if (!info) {
+            console.warn('Informações do livro não encontradas:', volumeId);
+            return;
+        }
         
         const book = {
             id: volumeId,
             title: info.title || "Título não disponível",
             author: info.authors?.join(", ") || "Autor desconhecido",
-            cover: info.imageLinks?.thumbnail || "https://via.placeholder.com/150",
+            cover: info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || "https://via.placeholder.com/150x220?text=Sem+Capa",
             description: info.description || "Descrição indisponível",
             publisher: info.publisher || "Desconhecida",
             publishedDate: info.publishedDate || "Desconhecida",
@@ -62,12 +109,14 @@ async function fetchBookData(volumeId) {
         const exists = favoriteBooks.some(fav => fav.id === volumeId);
         if (!exists) {
             favoriteBooks.push(book);
-            filteredBooks = [...favoriteBooks];
-            renderBooks();
-            updateCount();
+            console.log('Livro adicionado:', book.title);
         }
+        
     } catch (error) {
-        console.error('Erro ao buscar dados do livro:', error);
+        console.error('Erro ao buscar dados do livro:', volumeId, error);
+        
+        // Remove o favorito inválido do localStorage
+        localStorage.removeItem(`favorite-${volumeId}`);
     }
 }
 
@@ -101,13 +150,15 @@ function filterBooks(searchTerm) {
 
 // Função para atualizar status da busca
 function updateSearchStatus() {
+    if (!searchStatus) return;
+    
     if (!isSearchActive) {
         searchStatus.classList.remove('active');
-        clearSearchBtn.style.display = 'none';
+        if (clearSearchBtn) clearSearchBtn.style.display = 'none';
         return;
     }
 
-    clearSearchBtn.style.display = 'block';
+    if (clearSearchBtn) clearSearchBtn.style.display = 'block';
     searchStatus.classList.add('active');
     
     if (filteredBooks.length === 0) {
@@ -120,6 +171,15 @@ function updateSearchStatus() {
 
 // Função para renderizar livros
 function renderBooks() {
+    if (!booksGrid) {
+        console.warn('Elemento booksGrid não encontrado');
+        return;
+    }
+    
+    if (loadingBooks) {
+        return; // Não renderiza enquanto está carregando
+    }
+    
     if (favoriteBooks.length === 0) {
         booksGrid.innerHTML = `
             <div class="empty-state">
@@ -146,12 +206,12 @@ function renderBooks() {
     
     booksGrid.innerHTML = booksToShow.map((book, index) => {
         const originalIndex = favoriteBooks.indexOf(book);
-        const highlightedTitle = isSearchActive ? highlightText(book.title, searchInput.value) : book.title;
-        const highlightedAuthor = isSearchActive ? highlightText(book.author, searchInput.value) : book.author;
+        const highlightedTitle = isSearchActive ? highlightText(book.title, searchInput?.value || '') : book.title;
+        const highlightedAuthor = isSearchActive ? highlightText(book.author, searchInput?.value || '') : book.author;
         
         return `
             <div class="book-card ${isSearchActive ? 'highlight' : ''}" onclick="openBook(${originalIndex})">
-                <img src="${book.cover}" alt="${book.title}" class="book-cover-img" style="width: 100px; height: 150px; object-fit: cover; margin-bottom: 10px;">
+                <img src="${book.cover}" alt="${book.title}" class="book-cover-img" style="width: 100px; height: 150px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQjJ5mHArWKZohio_f2pwq1MmrqC0_T3TYug&s'">
                 <h3 class="book-title">${highlightedTitle}</h3>
                 <p class="book-author">por ${highlightedAuthor}</p>
                 <div class="book-actions">
@@ -165,6 +225,8 @@ function renderBooks() {
 
 // Função para atualizar contador
 function updateCount() {
+    if (!favoritesCount) return;
+    
     const totalBooks = favoriteBooks.length;
     const displayedBooks = isSearchActive ? filteredBooks.length : totalBooks;
     
@@ -178,46 +240,52 @@ function updateCount() {
 
 // Função para limpar busca
 function clearSearch() {
-    searchInput.value = '';
+    if (searchInput) searchInput.value = '';
     currentSearchTerm = '';
     isSearchActive = false;
     filteredBooks = [...favoriteBooks];
-    clearSearchBtn.style.display = 'none';
-    searchStatus.classList.remove('active');
+    if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+    if (searchStatus) searchStatus.classList.remove('active');
     renderBooks();
     updateCount();
-    searchInput.focus();
+    if (searchInput) searchInput.focus();
 }
 
-// Event listeners para busca
-searchInput.addEventListener('input', function() {
-    filterBooks(this.value);
-    renderBooks();
-    updateCount();
-});
-
-searchInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
+// Event listeners para busca (com verificação de existência dos elementos)
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
         filterBooks(this.value);
         renderBooks();
         updateCount();
-    }
-});
+    });
 
-searchBtn.addEventListener('click', function() {
-    filterBooks(searchInput.value);
-    renderBooks();
-    updateCount();
-});
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            filterBooks(this.value);
+            renderBooks();
+            updateCount();
+        }
+    });
 
-clearSearchBtn.addEventListener('click', clearSearch);
+    // Atalho para limpar busca com Escape
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            clearSearch();
+        }
+    });
+}
 
-// Atalho para limpar busca com Escape
-searchInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        clearSearch();
-    }
-});
+if (searchBtn) {
+    searchBtn.addEventListener('click', function() {
+        filterBooks(searchInput?.value || '');
+        renderBooks();
+        updateCount();
+    });
+}
+
+if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', clearSearch);
+}
 
 // Funções dos livros
 function openBook(index) {
@@ -225,7 +293,7 @@ function openBook(index) {
     if (!book) return;
     
     // Redireciona para a página de detalhes do livro
-    window.location.href = `detalhes.html?id=${book.id}`;
+    window.location.href = `index.html?id=${book.id}`;
 }
 
 function viewBook(index) {
@@ -233,7 +301,7 @@ function viewBook(index) {
     if (!book) return;
     
     // Redireciona para a página de detalhes do livro
-    window.location.href = `detalhes.html?id=${book.id}`;
+    window.location.href = `../TelaIndividual/index.html?id=${book.id}`;
 }
 
 function removeBook(index) {
@@ -249,33 +317,41 @@ function removeBook(index) {
         
         // Atualizar busca se estiver ativa
         if (isSearchActive) {
-            filterBooks(searchInput.value);
+            filterBooks(searchInput?.value || '');
+        } else {
+            filteredBooks = [...favoriteBooks];
         }
         
         renderBooks();
         updateCount();
+        
+        console.log('Livro removido dos favoritos:', book.title);
     }
 }
 
 // Botão de ordenação
-sortBtn.addEventListener('click', function() {
-    const isAscending = this.textContent.includes('↕') || this.textContent.includes('↓');
-    
-    if (isAscending) {
-        favoriteBooks.sort((a, b) => a.title.localeCompare(b.title));
-        this.textContent = 'Ordenar por título ↑';
-    } else {
-        favoriteBooks.sort((a, b) => b.title.localeCompare(a.title));
-        this.textContent = 'Ordenar por título ↓';
-    }
-    
-    // Reaplica filtro se busca estiver ativa
-    if (isSearchActive) {
-        filterBooks(searchInput.value);
-    }
-    
-    renderBooks();
-});
+if (sortBtn) {
+    sortBtn.addEventListener('click', function() {
+        const isAscending = this.textContent.includes('↕') || this.textContent.includes('↓');
+        
+        if (isAscending) {
+            favoriteBooks.sort((a, b) => a.title.localeCompare(b.title));
+            this.textContent = 'Ordenar por título ↑';
+        } else {
+            favoriteBooks.sort((a, b) => b.title.localeCompare(a.title));
+            this.textContent = 'Ordenar por título ↓';
+        }
+        
+        // Reaplica filtro se busca estiver ativa
+        if (isSearchActive) {
+            filterBooks(searchInput?.value || '');
+        } else {
+            filteredBooks = [...favoriteBooks];
+        }
+        
+        renderBooks();
+    });
+}
 
 // Função pública para adicionar livro aos favoritos (compatível com outras páginas)
 function addToFavorites(book) {
@@ -289,6 +365,11 @@ function addToFavorites(book) {
         // Salva no localStorage usando o padrão do Código 1
         localStorage.setItem(`favorite-${book.id}`, 'true');
         console.log('Livro adicionado aos favoritos:', book);
+        
+        if (!isSearchActive) {
+            filteredBooks = [...favoriteBooks];
+        }
+        
         renderBooks();
         updateCount();
         return true;
@@ -311,12 +392,9 @@ function getFavorites() {
 }
 
 // Função para recarregar favoritos (útil quando chamada de outras páginas)
-function reloadFavorites() {
-    loadFavorites();
-    setTimeout(() => {
-        renderBooks();
-        updateCount();
-    }, 1000); // Delay para permitir que as requisições da API sejam concluídas
+async function reloadFavorites() {
+    console.log('Recarregando favoritos...');
+    await loadFavorites();
 }
 
 // Torna as funções disponíveis globalmente para outras páginas
@@ -327,24 +405,27 @@ window.reloadFavorites = reloadFavorites;
 
 // Inicialização quando a página carrega
 document.addEventListener('DOMContentLoaded', function() {
-    loadFavorites();
+    console.log('DOM carregado, iniciando aplicação...');
+    
+    // Pequeno delay para garantir que todos os elementos estão prontos
     setTimeout(() => {
-        renderBooks();
-        updateCount();
-    }, 500); // Pequeno delay para permitir que as requisições da API sejam feitas
+        loadFavorites();
+    }, 100);
 });
 
 // Atualiza a página quando o localStorage muda (ex: em outra aba)
 window.addEventListener('storage', function(e) {
     if (e.key && e.key.startsWith('favorite-')) {
         console.log('Favorito alterado em outra aba, recarregando...');
-        reloadFavorites();
+        setTimeout(() => {
+            reloadFavorites();
+        }, 500);
     }
 });
 
 // Verifica periodicamente por mudanças nos favoritos
+let lastFavoriteCount = 0;
 setInterval(() => {
-    const currentFavoriteCount = favoriteBooks.length;
     let localStorageFavoriteCount = 0;
     
     // Conta quantos favoritos existem no localStorage
@@ -355,9 +436,32 @@ setInterval(() => {
         }
     }
     
-    // Se a quantidade for diferente, recarrega
-    if (currentFavoriteCount !== localStorageFavoriteCount) {
+    // Se a quantidade for diferente da última verificação, recarrega
+    if (localStorageFavoriteCount !== lastFavoriteCount) {
         console.log('Detectada mudança nos favoritos, recarregando...');
-        reloadFavorites();
+        lastFavoriteCount = localStorageFavoriteCount;
+        setTimeout(() => {
+            reloadFavorites();
+        }, 500);
     }
-}, 2000); // Verifica a cada 2 segundos
+}, 3000); // Verifica a cada 3 segundos
+
+// Função de debug para verificar localStorage
+function debugLocalStorage() {
+    console.log('=== DEBUG LOCALSTORAGE ===');
+    console.log('Total de itens:', localStorage.length);
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        if (key && key.startsWith('favorite-')) {
+            console.log(`${key}: ${value}`);
+        }
+    }
+    
+    console.log('Favoritos carregados na memória:', favoriteBooks.length);
+    console.log('========================');
+}
+
+// Torna a função de debug disponível globalmente
+window.debugLocalStorage = debugLocalStorage;
