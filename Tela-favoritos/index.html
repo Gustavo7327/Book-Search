@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Favoritos - Livraria Digital</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link para o CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
-            <a href="#" class="logo">Livraria Digital</a>
-            
+            <a href="#" class="logo">BookFinder</a>
+           
             <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Buscar livros, autores...">
-                <button class="search-btn">🔍</button>
+                <input type="text" class="search-bar" placeholder="Buscar livros, autores..." id="searchInput">
+                <button class="clear-search" id="clearSearch">×</button>
+                <button class="search-btn" id="searchBtn">🔍</button>
             </div>
-            
+           
             <ul class="nav-links">
                 <li><a href="#">Início</a></li>
                 <li><a href="#">Categorias</a></li>
@@ -32,18 +33,19 @@
             <h1 class="page-title">Meus Favoritos</h1>
         </div>
 
+        <div class="search-status" id="searchStatus"></div>
+
         <div class="favorites-container">
             <div class="favorites-header">
-                <span class="favorites-count">8 livros salvos</span>
-                <button class="sort-btn">Ordenar por título ↕</button>
+                <span class="favorites-count" id="favoritesCount">8 livros salvos</span>
+                <button class="sort-btn" id="sortBtn">Ordenar por título ↕</button>
             </div>
-
             <div class="books-grid" id="booksGrid">
                 <!-- Livros serão inseridos aqui via JavaScript -->
             </div>
         </div>
     </main>
 
-    <script src="script.js"></script> <!-- Link para o JS -->
+    <script src="script.js"></script>
 </body>
 </html>

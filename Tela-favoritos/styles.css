@@ -1,4 +1,7 @@
-* {
+/* ========================================
+    CONFIGURAÇÕES GERAIS
+   ======================================== */
+   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -11,7 +14,9 @@ body {
     color: #333;
 }
 
-/* Header */
+/* ========================================
+   HEADER E NAVEGAÇÃO
+   ======================================== */
 .header {
     background: white;
     box-shadow: 0 2px 20px rgba(0,0,0,0.1);
@@ -33,18 +38,16 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #4a90e2;
+    color: #03805E;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.logo::before {
-    content: "📚";
-    font-size: 1.8rem;
-}
-
+/* ========================================
+   BARRA DE PESQUISA
+   ======================================== */
 .search-container {
     flex: 1;
     max-width: 500px;
@@ -62,7 +65,7 @@ body {
 }
 
 .search-bar:focus {
-    border-color: #4a90e2;
+    border-color: #03805E;
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
@@ -71,7 +74,7 @@ body {
     right: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
-    background: #4a90e2;
+    background: #03805E;
     border: none;
     padding: 0.5rem;
     border-radius: 50%;
@@ -81,9 +84,33 @@ body {
 }
 
 .search-btn:hover {
-    background: #357abd;
+    background: #026b4d;
 }
 
+.clear-search {
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: none;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.clear-search:hover {
+    background: #f1f3f4;
+    color: #333;
+}
+
+/* ========================================
+   NAVEGAÇÃO PRINCIPAL
+   ======================================== */
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -99,7 +126,7 @@ body {
 }
 
 .nav-links a:hover {
-    color: #4a90e2;
+    color: #03805E;
 }
 
 .nav-links a::after {
@@ -109,7 +136,7 @@ body {
     height: 2px;
     bottom: -5px;
     left: 0;
-    background: #4a90e2;
+    background: #03805E;
     transition: width 0.3s ease;
 }
 
@@ -117,7 +144,9 @@ body {
     width: 100%;
 }
 
-/* Main Content */
+/* ========================================
+   CONTEÚDO PRINCIPAL
+   ======================================== */
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -148,8 +177,8 @@ body {
 
 .back-btn:hover {
     background: #f8f9fa;
-    border-color: #4a90e2;
-    color: #4a90e2;
+    border-color: #03805E;
+    color: #03805E;
     transform: translateX(-2px);
 }
 
@@ -159,7 +188,26 @@ body {
     font-weight: 600;
 }
 
-/* Favorites Grid */
+/* ========================================
+   STATUS DA PESQUISA
+   ======================================== */
+.search-status {
+    background: #e8f4f8;
+    border: 1px solid #b8e0ec;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    color: #2c5282;
+    display: none;
+}
+
+.search-status.active {
+    display: block;
+}
+
+/* ========================================
+   CONTAINER DOS FAVORITOS
+   ======================================== */
 .favorites-container {
     background: white;
     border-radius: 12px;
@@ -196,6 +244,9 @@ body {
     background: #e9ecef;
 }
 
+/* ========================================
+   GRID DE LIVROS
+   ======================================== */
 .books-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -220,7 +271,7 @@ body {
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(45deg, #4a90e2, #7bb3f0);
+    background: linear-gradient(45deg, #03805E, #03805E);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -228,13 +279,23 @@ body {
 .book-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-    border-color: #4a90e2;
+    border-color: #03805E;
 }
 
 .book-card:hover::before {
     opacity: 1;
 }
 
+/* Estilo para cartões destacados na pesquisa */
+.book-card.highlight {
+    background: #f0f9ff;
+    border-color: #03805E;
+    box-shadow: 0 2px 8px rgba(3, 128, 94, 0.1);
+}
+
+/* ========================================
+   CONTEÚDO DOS CARTÕES
+   ======================================== */
 .book-title {
     font-size: 1.1rem;
     font-weight: 600;
@@ -249,6 +310,18 @@ body {
     margin-bottom: 1rem;
 }
 
+/* Destaque do texto da pesquisa */
+.highlight-text {
+    background: #a7f3d0;
+    color: #065f46;
+    padding: 0 3px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+/* ========================================
+   AÇÕES DOS LIVROS
+   ======================================== */
 .book-actions {
     display: flex;
     gap: 0.5rem;
@@ -268,8 +341,8 @@ body {
 
 .action-btn:hover {
     background: #f8f9fa;
-    color: #4a90e2;
-    border-color: #4a90e2;
+    color: #03805E;
+    border-color: #03805E;
 }
 
 .remove-btn:hover {
@@ -277,7 +350,10 @@ body {
     border-color: #e74c3c;
 }
 
-.empty-state {
+/* ========================================
+   ESTADOS VAZIOS
+   ======================================== */
+.empty-state, .no-results {
     text-align: center;
     padding: 4rem 2rem;
     color: #666;
@@ -289,7 +365,9 @@ body {
     opacity: 0.5;
 }
 
-/* Responsive */
+/* ========================================
+   MEDIA QUERIES - RESPONSIVIDADE
+   ======================================== */
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
