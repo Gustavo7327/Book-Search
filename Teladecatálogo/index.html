@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -24,75 +25,71 @@
         }
     </script>
 </head>
-<body class="font-sans bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-primary text-xl font-bold">BookSearch</span>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-500 hover:text-primary focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-
+<body class="font-sans bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
+    <!-- Navbar Simplificada -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="../index.html" class="logo">BookSearch</a>
+            
+            <div class="flex items-center space-x-4">
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex md:items-center md:space-x-8">
-                     <a href="../index.html" class="text-gray-600 hover:text-primary transition-colors">Início</a>
-                    <a href="#" class="text-primary font-medium border-b-2 border-primary px-1">Catálogo</a>
-                    <a href="../Tela-favoritos/index.html" class="text-gray-600 hover:text-primary transition-colors">Favoritos</a>
-                </div>
+                <ul class="nav-links hidden md:flex">
+                    <li><a href="../index.html">Início</a></li>
+                    <li><a href="#" class="active">Catálogo</a></li>
+                    <li><a href="../Tela-favoritos/index.html">Favoritos</a></li>
+                </ul>
+                
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="theme-toggle">
+                    <svg class="sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg class="moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                
+                <!-- Mobile menu button -->
+                <button id="mobileMenuButton" class="mobile-menu-button md:hidden">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
             </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <div class="flex flex-col space-y-2 px-2 pt-2">
-                    <a href="../index.html" class="bg-primary text-white block px-3 py-2 rounded-md">Início</a>
-                    <a href="#" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Catálogo</a>
-                    <a href="../Tela-favoritos/index.html" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Favoritos</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Catálogo de Livros</h1>
-            <p class="text-gray-600 text-primary">Descubra novos livros com a API do Google Books</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2 dark:text-white">Catálogo de Livros</h1>
+            <p class="text-gray-600 text-primary dark:text-primary-light">Descubra novos livros com a API do Google Books</p>
         </div>
 
         <!-- Search and Filter Section -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8 dark:bg-gray-800">
             <div class="flex flex-col md:flex-row gap-4">
                 <!-- Search Input -->
                 <div class="flex-1">
-                    <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                         Pesquisar por título ou autor
                     </label>
                     <input 
                         type="text" 
                         id="searchInput" 
                         placeholder="Digite o título do livro ou nome do autor..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     >
                 </div>
 
                 <!-- Genre Filter -->
                 <div class="md:w-48">
-                    <label for="genreFilter" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="genreFilter" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                         Filtrar por gênero
                     </label>
                     <select 
                         id="genreFilter" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     >
                         <option value="">Todos os gêneros</option>
                         <option value="fiction">Ficção</option>
@@ -112,7 +109,7 @@
                 <div class="md:w-32 flex items-end">
                     <button 
                         id="searchBtn" 
-                        class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-primary-dark dark:hover:bg-primary"
                     >
                         Buscar
                     </button>
@@ -122,14 +119,14 @@
 
         <!-- Loading Indicator -->
         <div id="loading" class="hidden text-center py-8">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <p class="text-gray-600 mt-2">Carregando livros...</p>
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary dark:border-primary-light"></div>
+            <p class="text-gray-600 mt-2 dark:text-gray-300">Carregando livros...</p>
         </div>
 
         <!-- Results Info -->
         <div id="resultsInfo" class="hidden mb-4">
-            <p class="text-gray-600 text-sm">
-                Encontrados <span id="resultCount" class="font-semibold text-primary">0</span> resultados
+            <p class="text-gray-600 text-sm dark:text-gray-300">
+                Encontrados <span id="resultCount" class="font-semibold text-primary dark:text-primary-light">0</span> resultados
             </p>
         </div>
 
@@ -142,7 +139,7 @@
         <div id="loadMoreContainer" class="hidden text-center">
             <button 
                 id="loadMoreBtn" 
-                class="bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                class="bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-primary-dark dark:hover:bg-primary"
             >
                 Carregar mais livros
             </button>
@@ -150,9 +147,9 @@
 
         <!-- No Results Message -->
         <div id="noResults" class="hidden text-center py-12">
-            <div class="text-6xl mb-4">📖</div>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">Nenhum livro encontrado</h3>
-            <p class="text-gray-600">Tente pesquisar com termos diferentes ou remover os filtros.</p>
+            <div class="text-6xl mb-4 dark:text-gray-300">📖</div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2 dark:text-white">Nenhum livro encontrado</h3>
+            <p class="text-gray-600 dark:text-gray-300">Tente pesquisar com termos diferentes ou remover os filtros.</p>
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 class BooksCatalog {
     constructor() {
-        this.apiKey = ''; // Deixe vazio para usar sem API key (com limitações)
+        this.apiKey = '';
         this.baseUrl = 'https://www.googleapis.com/books/v1/volumes';
         this.currentQuery = '';
         this.currentGenre = '';
@@ -11,7 +11,6 @@ class BooksCatalog {
         this.initializeElements();
         this.attachEventListeners();
         this.loadInitialBooks();
-        this.setupMobileMenu();
     }
 
     initializeElements() {
@@ -27,15 +26,6 @@ class BooksCatalog {
         this.noResults = document.getElementById('noResults');
     }
 
-    setupMobileMenu() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-
     attachEventListeners() {
         this.searchBtn.addEventListener('click', () => this.performSearch());
         this.searchInput.addEventListener('keypress', (e) => {
@@ -46,7 +36,7 @@ class BooksCatalog {
     }
 
     async loadInitialBooks() {
-        this.currentQuery = 'programming'; // Query inicial
+        this.currentQuery = 'programming';
         await this.searchBooks(true);
     }
 
@@ -77,7 +67,6 @@ class BooksCatalog {
         try {
             let searchQuery = this.currentQuery;
             
-            // Adiciona filtro de gênero se selecionado
             if (this.currentGenre) {
                 searchQuery += `+subject:${this.currentGenre}`;
             }
@@ -208,6 +197,35 @@ class BooksCatalog {
         return text.substring(0, maxLength).trim() + '...';
     }
 }
+
+// Theme toggle functionality
+const themeToggle = document.getElementById('themeToggle');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+// Check for saved theme preference or use system preference
+const currentTheme = localStorage.getItem('theme') || 
+                    (prefersDarkScheme.matches ? 'dark' : 'light');
+
+// Apply the current theme
+if (currentTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+} else {
+    document.documentElement.classList.remove('dark');
+}
+
+// Toggle theme on button click
+themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+// Mobile menu functionality
+const mobileMenuButton = document.getElementById('mobileMenuButton');
+const navLinks = document.querySelector('.nav-links');
+
+mobileMenuButton.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+});
 
 // Initialize the catalog when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
