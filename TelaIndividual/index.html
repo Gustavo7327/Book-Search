@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'media',
       theme: {
         extend: {
           fontFamily: {
@@ -46,9 +47,9 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-white text-gray-800 transition-colors duration-500">
+<body class="bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 transition-colors duration-500">
   
-  <nav class="bg-white shadow-md">
+  <nav class="bg-white dark:bg-gray-900 shadow-md">
     <div class="container mx-auto px-4">
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center">
@@ -62,16 +63,16 @@
           </button>
         </div>
         <div class="hidden md:flex md:items-center md:space-x-8">
-          <a href="../index.html" class="text-gray-600 hover:text-primary transition-colors">Início</a>
+          <a href="../index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">Início</a>
           <a href="../Teladecatálogo/index.html" class="text-primary font-medium border-b-2 border-primary px-1">Catálogo</a>
-          <a href="../Tela-favoritos/index.html" class="text-gray-600 hover:text-primary transition-colors">Favoritos</a>
+          <a href="../Tela-favoritos/index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">Favoritos</a>
         </div>
       </div>
       <div id="mobile-menu" class="hidden md:hidden pb-4">
         <div class="flex flex-col space-y-2 px-2 pt-2">
           <a href="../index.html" class="bg-primary text-white block px-3 py-2 rounded-md">Início</a>
-          <a href="../Teladecatálogo/index.html" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Catálogo</a>
-          <a href="../Tela-favoritos/index.html" class="text-gray-600 hover:bg-gray-100 block px-3 py-2 rounded-md">Favoritos</a>
+          <a href="../Teladecatálogo/index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 block px-3 py-2 rounded-md">Catálogo</a>
+          <a href="../Tela-favoritos/index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 block px-3 py-2 rounded-md">Favoritos</a>
         </div>
       </div>
     </div>
@@ -80,21 +81,21 @@
   <div class="max-w-6xl mx-auto px-4 py-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
       <!-- Bloco da Capa -->
-      <div id="book-cover-container" class="col-span-1 bg-white rounded-lg shadow p-[10px] flex flex-col items-center w-fit">
+      <div id="book-cover-container" class="col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow p-[10px] flex flex-col items-center w-fit">
         <img id="book-cover" class="w-72 h-auto rounded-lg shadow object-cover" src="" alt="Capa do livro" onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQjJ5mHArWKZohio_f2pwq1MmrqC0_T3TYug&s'">
       </div>
 
       <!-- Bloco principal -->
       <div class="col-span-2 space-y-6">
         <!-- Título e autores -->
-        <div class="pb-4 border-b border-gray-300 mb-6">
+        <div class="pb-4 border-b border-gray-300 dark:border-gray-600 mb-6">
           <h2 id="book-title" class="text-2xl font-bold mb-1">Título</h2>
-          <p id="book-authors" class="text-sm italic text-gray-600 mb-2"></p>
-          <div id="categories" class="flex flex-wrap gap-2 text-xs font-medium text-blue-700"></div>
+          <p id="book-authors" class="text-sm italic text-gray-600 dark:text-gray-400 mb-2"></p>
+          <div id="categories" class="flex flex-wrap gap-2 text-xs font-medium text-blue-700 dark:text-blue-300"></div>
         </div>
 
         <!-- Botão de Favorito -->
-        <button id="favorite-button" class="flex items-center text-gray-500 hover:text-red-600 transition-colors text-sm mb-2">
+        <button id="favorite-button" class="flex items-center text-gray-500 dark:text-gray-300 hover:text-red-600 transition-colors text-sm mb-2">
           <svg id="heart-icon" class="w-5 h-5 mr-1 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path id="heart-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
@@ -103,34 +104,34 @@
         </button>
 
         <!-- Sinopse -->
-        <div class="bg-white rounded-lg shadow p-5">
-          <h3 class="text-lg font-semibold mb-2">Sinopse</h3>
-          <p id="book-description" class="text-xs leading-relaxed text-gray-800">Carregando descrição...</p>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+          <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">Sinopse</h3>
+          <p id="book-description" class="text-xs leading-relaxed text-gray-800 dark:text-gray-200">Carregando descrição...</p>
         </div>
 
         <!-- Detalhes da publicação -->
-        <div class="bg-white rounded-lg shadow p-5">
-          <h3 class="text-lg font-semibold mb-4">Informações do Livro</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Informações do Livro</h3>
           <div class="text-xs grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div>
-              <p class="font-semibold text-gray-700 mb-1">Editora</p>
-              <p id="publisher" class="text-gray-800"></p>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Editora</p>
+              <p id="publisher" class="text-gray-800 dark:text-gray-200"></p>
             </div>
             <div>
-              <p class="font-semibold text-gray-700 mb-1">ISBN</p>
-              <p id="isbn" class="text-gray-800"></p>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">ISBN</p>
+              <p id="isbn" class="text-gray-800 dark:text-gray-200"></p>
             </div>
             <div>
-              <p class="font-semibold text-gray-700 mb-1">Páginas</p>
-              <p id="page-count" class="text-gray-800"></p>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Páginas</p>
+              <p id="page-count" class="text-gray-800 dark:text-gray-200"></p>
             </div>
             <div>
-              <p class="font-semibold text-gray-700 mb-1">Idioma</p>
-              <p id="language" class="text-gray-800"></p>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Idioma</p>
+              <p id="language" class="text-gray-800 dark:text-gray-200"></p>
             </div>
             <div>
-              <p class="font-semibold text-gray-700 mb-1">Publicado em</p>
-              <p id="published-date" class="text-gray-800"></p>
+              <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Publicado em</p>
+              <p id="published-date" class="text-gray-800 dark:text-gray-200"></p>
             </div>
           </div>
         </div>
@@ -139,12 +140,11 @@
   </div>
 
   <script>
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
   </script>
 
   <script>
@@ -177,7 +177,7 @@
         if (info.categories) {
           info.categories.forEach(cat => {
             const span = document.createElement("span");
-            span.className = "bg-blue-100 px-2 py-1 rounded-full";
+            span.className = "bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full";
             span.textContent = cat;
             categoriesEl.appendChild(span);
           });
@@ -187,7 +187,6 @@
           categoriesEl.appendChild(span);
         }
 
-        // Favorito - Carregar do localStorage
         const favoriteKey = `favorite-${volumeId}`;
         let isFavorited = localStorage.getItem(favoriteKey) === "true";
         const heartIcon = document.getElementById("heart-icon");
