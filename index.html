@@ -5,11 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Book Search - Descubra sua próxima leitura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0fdf9',
+                            100: '#ccfbef',
+                            200: '#99f6e0', 
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#03805E',
+                            600: '#02684d',
+                            700: '#01543f',
+                            800: '#014332',
+                            900: '#013528'
+                        }
+                    },
                     animation: {
                         'fade-in-up': 'fadeInUp 0.6s ease-out',
                         'bounce-slow': 'bounce 2s infinite',
@@ -21,80 +39,143 @@
                         }
                     }
                 }
-            }
+            },
+            darkMode: 'class'
         }
     </script>
+    <style>
+        .theme-toggle {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #374151;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle:before {
+            content: '';
+            position: absolute;
+            width: 19px;
+            height: 19px;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.3s ease;
+            transform: translateX(0);
+        }
+
+        .dark .theme-toggle {
+            background: #434b45;
+        }
+
+        .dark .theme-toggle:before {
+            transform: translateX(25px);
+        }
+
+        .theme-toggle svg {
+            width: 14px;
+            height: 14px;
+            z-index: 1;
+        }
+
+        .sun-icon {
+            color: #fbbf24;
+            margin-left: 2px;
+        }
+
+        .moon-icon {
+            color: #e5e7eb;
+            margin-right: 2px;
+        }
+
+        .dark .sun-icon {
+            color: #6b7280;
+        }
+
+        .dark .moon-icon {
+            color: #000000;
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 to-primary-50 dark:from-gray-900 dark:to-gray-800 min-h-screen transition-colors duration-300">
     
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-colors duration-300">
         <div class="container mx-auto px-4 sm:px-6 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <div
-                        class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <div class="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                         <span class="text-white font-bold text-sm">📚</span>
                     </div>
-                    <h1
-                        class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">
                         Book Search</h1>
                 </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#inicio"
-                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Início</a>
-                    <a href="#recursos"
-                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Recursos</a>
-                    <a href="#como-funciona"
-                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Como Funciona</a>
-                    <a href="#contato"
-                        class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contato</a>
-                </nav>
                 
-                <button class="md:hidden p-2" onclick="toggleMobileMenu()">
-                    <div class="w-6 h-6 flex flex-col justify-center items-center space-y-1">
-                        <span class="block w-4 h-0.5 bg-gray-600"></span>
-                        <span class="block w-4 h-0.5 bg-gray-600"></span>
-                        <span class="block w-4 h-0.5 bg-gray-600"></span>
-                    </div>
-                </button>
+                <div class="flex items-center gap-4">
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#inicio" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-200">Início</a>
+                        <a href="#recursos" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-200">Recursos</a>
+                        <a href="#como-funciona" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-200">Como Funciona</a>
+                        <a href="#contato" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-200">Contato</a>
+                    </nav>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggle" class="theme-toggle">
+                        <svg class="sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg class="moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                    
+                    <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+                        <div class="w-6 h-6 flex flex-col justify-center items-center space-y-1">
+                            <span class="block w-4 h-0.5 bg-gray-600 dark:bg-gray-300"></span>
+                            <span class="block w-4 h-0.5 bg-gray-600 dark:bg-gray-300"></span>
+                            <span class="block w-4 h-0.5 bg-gray-600 dark:bg-gray-300"></span>
+                        </div>
+                    </button>
+                </div>
             </div>
             
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-100">
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-100 dark:border-gray-700">
                 <nav class="flex flex-col space-y-2 pt-4">
-                    <a href="#inicio" class="text-gray-700 hover:text-blue-600 py-2">Início</a>
-                    <a href="#recursos" class="text-gray-700 hover:text-blue-600 py-2">Recursos</a>
-                    <a href="#como-funciona" class="text-gray-700 hover:text-blue-600 py-2">Como Funciona</a>
-                    <a href="#contato" class="text-gray-700 hover:text-blue-600 py-2">Contato</a>
+                    <a href="#inicio" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 py-2">Início</a>
+                    <a href="#recursos" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 py-2">Recursos</a>
+                    <a href="#como-funciona" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 py-2">Como Funciona</a>
+                    <a href="#contato" class="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 py-2">Contato</a>
                 </nav>
             </div>
         </div>
     </header>
 
-
     <section id="inicio" class="container mx-auto px-4 sm:px-6 py-12 lg:py-20">
         <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div class="flex-1 text-center lg:text-left animate-fade-in-up">
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-6 transition-colors duration-300">
                     Descubra, salve e explore
-                    <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">livros com
-                        facilidade</span>
+                    <span class="bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">livros com facilidade</span>
                 </h2>
-                <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
-                    O <span class="text-blue-600 font-semibold">Book Search</span> é a sua plataforma completa para
+                <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed transition-colors duration-300">
+                    O <span class="text-primary-500 dark:text-primary-400 font-semibold">Book Search</span> é a sua plataforma completa para
                     buscar livros, receber recomendações personalizadas, aplicar filtros avançados e salvar seus
                     favoritos. Tudo isso integrado à poderosa API do Google Books.
                 </p>
-                    <a href="Teladecatálogo/index.html"
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
-                        Comece agora
-                    </a>
+                <a href="Teladecatálogo/index.html"
+                    class="inline-block bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+                    Comece agora
+                </a>
             </div>
             <div class="flex-1 w-full max-w-md lg:max-w-lg">
                 <div class="relative">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur-xl opacity-30 animate-pulse">
-                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary-400 to-primary-500 dark:from-primary-600 dark:to-primary-700 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
                     <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                         alt="Biblioteca com livros" class="relative w-full h-auto rounded-2xl shadow-2xl">
                 </div>
@@ -102,158 +183,158 @@
         </div>
     </section>
 
-    
     <section id="recursos" class="container mx-auto px-4 sm:px-6 py-16">
         <div class="text-center mb-12">
-            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Recursos Incríveis</h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Descubra tudo o que nossa plataforma pode fazer por você
-            </p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors duration-300">Recursos Incríveis</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto transition-colors duration-300">Descubra tudo o que nossa plataforma pode fazer por você</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div
-                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-                <div
-                    class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <span class="text-2xl">🔍</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-xl lg:text-2xl">🔍</span>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Busca Inteligente</h3>
-                <p class="text-gray-600 leading-relaxed">Encontre livros por título, autor, ISBN ou até mesmo por
-                    trechos. Nossa busca avançada entende o que você procura.</p>
+                <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">Busca Inteligente</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm lg:text-base transition-colors duration-300">Encontre livros por título, autor, ISBN ou até mesmo por trechos. Nossa busca avançada entende o que você procura.</p>
             </div>
 
-            <div
-                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-                <div
-                    class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <span class="text-2xl">💾</span>
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-xl lg:text-2xl">💾</span>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Lista de Favoritos</h3>
-                <p class="text-gray-600 leading-relaxed">Salve seus livros preferidos, crie listas personalizadas e
-                    nunca perca uma recomendação importante.</p>
+                <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">Lista de Favoritos</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm lg:text-base transition-colors duration-300">Salve seus livros preferidos, crie listas personalizadas e nunca perca uma recomendação importante.</p>
             </div>
 
-            <div
-                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-                <div
-                    class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <span class="text-2xl">🔧</span>
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 lg:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group sm:col-span-2 lg:col-span-1">
+                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-xl lg:text-2xl">🔧</span>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Filtros Avançados</h3>
-                <p class="text-gray-600 leading-relaxed">Filtre por gênero, ano de publicação, idioma, avaliação e muito
-                    mais para encontrar exatamente o que procura.</p>
+                <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">Filtros Avançados</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm lg:text-base transition-colors duration-300">Filtre por gênero, ano de publicação, idioma, avaliação e muito mais para encontrar exatamente o que procura.</p>
             </div>
         </div>
     </section>
 
-    
-    <section id="como-funciona" class="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+    <section id="como-funciona" class="bg-gradient-to-br from-slate-100 to-primary-100 dark:from-gray-800 dark:to-gray-700 py-16 transition-colors duration-300">
         <div class="container mx-auto px-4 sm:px-6">
             <div class="text-center mb-12">
-                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Como Funciona</h2>
-                <p class="text-xl text-blue-100 max-w-2xl mx-auto">Três passos simples para descobrir sua próxima
-                    leitura favorita</p>
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors duration-300">Como Funciona</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto transition-colors duration-300">Três passos simples para descobrir sua próxima leitura favorita</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center group">
-                    <div
-                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-3xl">1️⃣</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="text-center group sm:col-span-2 lg:col-span-1">
+                    <div class="w-16 h-16 lg:w-20 lg:h-20 bg-primary-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-2xl lg:text-3xl">1️⃣</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Busque</h3>
-                    <p class="text-blue-100">Digite o nome do livro, autor ou qualquer palavra-chave relacionada ao que
-                        você procura.</p>
+                    <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">Busque</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm lg:text-base transition-colors duration-300">Digite o nome do livro, autor ou qualquer palavra-chave relacionada ao que você procura.</p>
                 </div>
                 <div class="text-center group">
-                    <div
-                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-3xl">2️⃣</span>
+                    <div class="w-16 h-16 lg:w-20 lg:h-20 bg-primary-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-2xl lg:text-3xl">2️⃣</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Explore</h3>
-                    <p class="text-blue-100">Navegue pelos resultados, use filtros e veja recomendações personalizadas
-                        para você.</p>
+                    <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">Explore</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm lg:text-base transition-colors duration-300">Navegue pelos resultados, use filtros e veja recomendações personalizadas para você.</p>
                 </div>
                 <div class="text-center group">
-                    <div
-                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-3xl">3️⃣</span>
+                    <div class="w-16 h-16 lg:w-20 lg:h-20 bg-primary-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-2xl lg:text-3xl">3️⃣</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Salve</h3>
-                    <p class="text-blue-100">Adicione à sua lista de favoritos e acompanhe seu progresso de leitura.</p>
+                    <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">Salve</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm lg:text-base transition-colors duration-300">Adicione à sua lista de favoritos e acompanhe seu progresso de leitura.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    
-
-    <section class="bg-gradient-to-r from-gray-900 to-gray-800 py-16">
+    <section class="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 py-16 transition-colors duration-300">
         <div class="container mx-auto px-4 sm:px-6 text-center">
             <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Pronto para descobrir sua próxima leitura?</h2>
-            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Junte-se a milhares de leitores que já transformaram
-                sua experiência de descoberta de livros</p>
+            <p class="text-xl text-gray-300 dark:text-gray-400 mb-8 max-w-2xl mx-auto transition-colors duration-300">Junte-se a milhares de leitores que já transformaram sua experiência de descoberta de livros</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="Teladecatálogo/index.html"
-                    class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+                    class="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
                     Acessar agora
                 </a>
             </div>
         </div>
     </section>
 
-    
-    <footer id="contato" class="bg-white py-12">
+    <footer id="contato" class="bg-white dark:bg-gray-900 py-12 transition-colors duration-300">
         <div class="container mx-auto px-4 sm:px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-2 mb-4">
-                        <div
-                            class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                             <span class="text-white font-bold text-sm">📚</span>
                         </div>
-                        <h3
-                            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <h3 class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">
                             Book Search</h3>
                     </div>
-                    <p class="text-gray-600 mb-4 max-w-md">Sua plataforma completa para descobrir, salvar e explorar o
-                        mundo dos livros com a tecnologia mais avançada.</p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4 max-w-md transition-colors duration-300">Sua plataforma completa para descobrir, salvar e explorar o mundo dos livros com a tecnologia mais avançada.</p>
                     <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors">📘</a>
-                        <a href="#"
-                            class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors">📱</a>
-                        <a href="#"
-                            class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors">💬</a>
+                        <a href="#" class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors">📘</a>
+                        <a href="#" class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors">📱</a>
+                        <a href="#" class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors">💬</a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-gray-900 mb-4">Recursos</h4>
-                    <ul class="space-y-2 text-gray-600">
-                        <li class="hover:text-blue-600 transition-colors">Busca Avançada</li>
-                        <li class="hover:text-blue-600 transition-colors">Listar favoritos</li>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">Recursos</h4>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Busca Avançada</li>
+                        <li class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Listar favoritos</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-gray-900 mb-4">Suporte</h4>
-                    <ul class="space-y-2 text-gray-600">
-                        <li><a href="https://github.com/Gustavo7327/Book-Search" class="hover:text-blue-600 transition-colors">Contato</a></li>
-                        <li><a href="https://developers.google.com/books?hl=pt-br" class="hover:text-blue-600 transition-colors">API</a></li>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">Suporte</h4>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li><a href="https://github.com/Gustavo7327/Book-Search" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Contato</a></li>
+                        <li><a href="https://developers.google.com/books?hl=pt-br" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">API</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-200 pt-8 text-center text-gray-500">
-                <p>© 2025 Book Search. Feito com ❤️ usando Tailwind CSS e Google Books API. Todos os direitos
-                    reservados.</p>
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-8 text-center text-gray-500 dark:text-gray-400 transition-colors duration-300">
+                <p>© 2025 Book Search. Feito com ❤️ usando Tailwind CSS e Google Books API. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
 
     <script>
+        // Dark mode functionality
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Check if user has a saved theme preference or default to light mode
+        const savedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const currentTheme = savedTheme || systemTheme;
+
+        // Set initial theme
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Theme toggle event listener
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Mobile menu toggle
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         }
 
-        
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -263,17 +344,22 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
                 }
             });
         });
 
-        
+        // Header background on scroll
         window.addEventListener('scroll', function () {
             const header = document.querySelector('header');
             if (window.scrollY > 100) {
-                header.classList.add('bg-white/90');
+                header.classList.add('bg-white/90', 'dark:bg-gray-900/90');
             } else {
-                header.classList.remove('bg-white/90');
+                header.classList.remove('bg-white/90', 'dark:bg-gray-900/90');
             }
         });
     </script>
