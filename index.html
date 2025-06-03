@@ -83,24 +83,6 @@
             height: 14px;
             z-index: 1;
         }
-
-        .sun-icon {
-            color: #fbbf24;
-            margin-left: 2px;
-        }
-
-        .moon-icon {
-            color: #e5e7eb;
-            margin-right: 2px;
-        }
-
-        .dark .sun-icon {
-            color: #6b7280;
-        }
-
-        .dark .moon-icon {
-            color: #000000;
-        }
     </style>
 </head>
 
@@ -126,14 +108,14 @@
                     </nav>
 
                     <!-- Dark Mode Toggle -->
-                    <button id="themeToggle" class="theme-toggle">
-                        <svg class="sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        <svg class="moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                    </button>
+                    <button id="theme-toggle" class="ml-4 p-2 rounded-md text-gray-500 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors">
+            <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
                     
                     <button class="md:hidden p-2" onclick="toggleMobileMenu()">
                         <div class="w-6 h-6 flex flex-col justify-center items-center space-y-1">
@@ -301,32 +283,49 @@
 
     <script>
         // Dark mode functionality
-        const themeToggle = document.getElementById('themeToggle');
+const themeToggle = document.getElementById('theme-toggle');
+const sunIcon = document.getElementById('sun-icon');
+const moonIcon = document.getElementById('moon-icon');
 
-        // Check if user has a saved theme preference or default to light mode
-        const savedTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const currentTheme = savedTheme || systemTheme;
+// Check if user has a saved theme preference or default to light mode
+const savedTheme = localStorage.getItem('theme');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const currentTheme = savedTheme || systemTheme;
 
-        // Set initial theme
-        if (currentTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+// Function to update icons based on theme
+function updateIcons(isDark) {
+    if (isDark) {
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+    } else {
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+    }
+}
 
-        // Theme toggle event listener
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            if (isDark) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
+// Set initial theme and icons
+if (currentTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+    updateIcons(true);
+} else {
+    document.documentElement.classList.remove('dark');
+    updateIcons(false);
+}
+
+// Theme toggle event listener
+themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    if (isDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        updateIcons(false);
+    } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        updateIcons(true);
+    }
+});
 
         // Mobile menu toggle
         function toggleMobileMenu() {
