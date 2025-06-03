@@ -465,3 +465,42 @@ function debugLocalStorage() {
 
 // Torna a função de debug disponível globalmente
 window.debugLocalStorage = debugLocalStorage;
+
+// ========================================
+// DARK MODE FUNCTIONALITY
+// ========================================
+
+// Função para alternar dark mode
+function toggleDarkMode() {
+    const body = document.body;
+    const isDarkMode = body.classList.contains('dark-mode');
+    
+    if (isDarkMode) {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'false');
+    } else {
+        body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'true');
+    }
+}
+
+// Função para carregar preferência salva
+function loadDarkModePreference() {
+    const savedMode = localStorage.getItem('darkMode');
+    
+    if (savedMode === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+}
+
+// Inicializar dark mode quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    // Carregar preferência salva
+    loadDarkModePreference();
+    
+    // Adicionar event listener ao botão
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+    }
+});
