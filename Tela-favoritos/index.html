@@ -4,46 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Favoritos - Livraria Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="" href="script.js">
 </head>
-<body>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <!-- Header -->
-    <header class="header">
-        <nav class="nav-container">
-            <a href="#" class="logo">BookSearch</a>
-           
-            <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Buscar livros, autores..." id="searchInput">
-                <button class="clear-search" id="clearSearch">×</button>
-                <button class="search-btn" id="searchBtn">🔍</button>
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-gray-700">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2 text-xl font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                    <span class="text-2xl">📚</span>
+                    BookSearch
+                </a>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-md mx-4">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            class="w-full pl-4 pr-20 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" 
+                            placeholder="Buscar nos favoritos..."
+                            id="searchInput"
+                        >
+                        <button 
+                            class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors hidden"
+                            id="clearSearch"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <button 
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary-500 hover:bg-primary-600 text-white p-1.5 rounded-full transition-colors duration-200"
+                            id="searchBtn"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+               
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="../index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors relative group">
+                        Início
+                    </a>
+                    <a href="../Teladecatálogo/index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors relative group">
+                        Catálogo
+                    </a>
+                    <a href="#" class="text-primary-600 dark:text-primary-400 font-medium relative">
+                        Favoritos
+                    </a>
+                </nav>
+                 <!-- Dark Mode Toggle -->
+                <button 
+                    class="p-2.5 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105"
+                    id="darkModeToggle"
+                >
+                    <span class="sun-icon dark:hidden text-xl"><svg class="sun-icon w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg></span>
+                    <span class="moon-icon hidden dark:inline text-xl"> <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg></span>
+                </button>
             </div>
-           <button class="dark-mode-toggle" id="darkModeToggle">
-                <span class="sun-icon">☀️</span>
-                <span class="moon-icon">🌙</span>
-            </button>
-            <ul class="nav-links">
-                <li><a href="../index.html">Início</a></li>
-                <li><a href="../Teladecatálogo/index.html">Catálogo</a></li>
-                <li><a href="#">Favoritos</a></li>
-            </ul>
         </nav>
     </header>
 
     <!-- Main Content -->
-    <main class="main-container">
-        <div class="page-header">
-            <h1 class="page-title">Meus Favoritos</h1>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Meus Favoritos</h1>
         </div>
 
-        <div class="search-status" id="searchStatus"></div>
+        <!-- Search Status -->
+        <div class="hidden mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg text-blue-800 dark:text-blue-200" id="searchStatus">
+            <!-- Status will be inserted here -->
+        </div>
 
-        <div class="favorites-container">
-            <div class="favorites-header">
-                <span class="favorites-count" id="favoritesCount">0 livros salvos</span>
-                <button class="sort-btn" id="sortBtn">Ordenar por título ↕</button>
+        <!-- Favorites Container -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 border-b border-gray-200 dark:border-gray-700">
+                <span class="text-gray-600 dark:text-gray-400 font-medium" id="favoritesCount">0 livros salvos</span>
+                <button 
+                    class="px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200 text-sm font-medium"
+                    id="sortBtn"
+                >
+                    Ordenar por título ↕
+                </button>
             </div>
-            <div class="books-grid" id="booksGrid">
-                <!-- Livros serão inseridos aqui via JavaScript -->
+
+            <!-- Books Grid -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="booksGrid">
+                    <!-- Loading State -->
+                    <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                        <div class="text-6xl mb-4">⏳</div>
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Carregando seus livros favoritos...</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Aguarde um momento.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
