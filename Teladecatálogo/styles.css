@@ -105,14 +105,13 @@
 }
 
 .logo {
-    font-size: 1.5rem;
     font-weight: bold;
     color: #03805E;
     text-decoration: none;
 }
 
 .dark .logo {
-    color: #04a67c;
+    color: #037b5a;
 }
 
 .nav-links {

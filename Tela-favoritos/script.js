@@ -3,6 +3,9 @@ tailwind.config = {
     darkMode: 'class',
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['Poppins', 'sans-serif'],
+            },
             colors: {
                 primary: {
                     50: '#f0fdf4',
@@ -51,13 +54,13 @@ function toggleDarkMode() {
     applyDarkMode(newMode);
     
     // Salva a preferência do usuário (override do sistema)
-    localStorage.setItem('darkModeOverride', newMode ? 'dark' : 'light');
+    localStorage.setItem('theme', newMode ? 'dark' : 'light');
     
     console.log('Dark mode toggled:', newMode ? 'dark' : 'light');
 }
 
 function loadDarkModePreference() {
-    const userOverride = localStorage.getItem('darkModeOverride');
+    const userOverride = localStorage.getItem('theme');
     
     if (userOverride) {
         // Se o usuário já fez uma escolha manual, usa essa preferência
@@ -77,7 +80,7 @@ function setupSystemThemeListener() {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         
         mediaQuery.addEventListener('change', (e) => {
-            const userOverride = localStorage.getItem('darkModeOverride');
+            const userOverride = localStorage.getItem('theme');
             
             // Só aplica mudança do sistema se usuário não tiver override ativo
             if (!userOverride) {
@@ -90,7 +93,7 @@ function setupSystemThemeListener() {
 
 function resetToSystemTheme() {
     // Função para resetar para preferência do sistema (opcional)
-    localStorage.removeItem('darkModeOverride');
+    localStorage.removeItem('theme');
     const systemPrefersDark = detectSystemTheme();
     applyDarkMode(systemPrefersDark);
     console.log('Resetado para preferência do sistema:', systemPrefersDark ? 'dark' : 'light');
@@ -252,7 +255,7 @@ async function fetchBookData(volumeId) {
             id: volumeId,
             title: info.title || "Título não disponível",
             author: info.authors?.join(", ") || "Autor desconhecido",
-            cover: info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || "https://via.placeholder.com/150x220?text=Sem+Capa",
+            cover: info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQjJ5mHArWKZohio_f2pwq1MmrqC0_T3TYug&s",
             description: info.description || "Descrição indisponível",
             publisher: info.publisher || "Desconhecida",
             publishedDate: info.publishedDate || "Desconhecida",
