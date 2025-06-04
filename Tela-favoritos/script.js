@@ -1,3 +1,23 @@
+// Configuração do Tailwind CSS
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Poppins', 'sans-serif'],
+            },
+            colors: {
+                primary: {
+                    50: '#f0fdf4',
+                    500: '#22c55e',
+                    600: '#16a34a',
+                    700: '#15803d',
+                }
+            }
+        }
+    }
+}
+
 // Variáveis globais
 let favoriteBooks = [];
 let filteredBooks = [];
@@ -14,7 +34,147 @@ const booksGrid = document.getElementById('booksGrid');
 const favoritesCount = document.getElementById('favoritesCount');
 const sortBtn = document.getElementById('sortBtn');
 
-// Função para carregar favoritos do localStorage (agora compatível com o Código 1)
+// Dark Mode Functions - VERSÃO MELHORADA
+function detectSystemTheme() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+function applyDarkMode(isDark) {
+    if (isDark) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+}
+
+function toggleDarkMode() {
+    const currentlyDark = document.documentElement.classList.contains('dark');
+    const newMode = !currentlyDark;
+    
+    applyDarkMode(newMode);
+    
+    // Salva a preferência do usuário (override do sistema)
+    localStorage.setItem('theme', newMode ? 'dark' : 'light');
+    
+    console.log('Dark mode toggled:', newMode ? 'dark' : 'light');
+}
+
+function loadDarkModePreference() {
+    const userOverride = localStorage.getItem('theme');
+    
+    if (userOverride) {
+        // Se o usuário já fez uma escolha manual, usa essa preferência
+        applyDarkMode(userOverride === 'dark');
+        console.log('Aplicando preferência do usuário:', userOverride);
+    } else {
+        // Se não há preferência manual, usa a do sistema
+        const systemPrefersDark = detectSystemTheme();
+        applyDarkMode(systemPrefersDark);
+        console.log('Aplicando preferência do sistema:', systemPrefersDark ? 'dark' : 'light');
+    }
+}
+
+function setupSystemThemeListener() {
+    // Monitora mudanças na preferência do sistema
+    if (window.matchMedia) {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        mediaQuery.addEventListener('change', (e) => {
+            const userOverride = localStorage.getItem('theme');
+            
+            // Só aplica mudança do sistema se usuário não tiver override ativo
+            if (!userOverride) {
+                applyDarkMode(e.matches);
+                console.log('Sistema mudou para:', e.matches ? 'dark' : 'light');
+            }
+        });
+    }
+}
+
+function resetToSystemTheme() {
+    // Função para resetar para preferência do sistema (opcional)
+    localStorage.removeItem('theme');
+    const systemPrefersDark = detectSystemTheme();
+    applyDarkMode(systemPrefersDark);
+    console.log('Resetado para preferência do sistema:', systemPrefersDark ? 'dark' : 'light');
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado, iniciando aplicação...');
+    
+    // NOVA ORDEM: Primeiro configura o dark mode
+    loadDarkModePreference();
+    setupSystemThemeListener();
+    
+    // Adicionar event listener ao botão de dark mode
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        
+        // Opcional: Double click para resetar para sistema
+        darkModeToggle.addEventListener('dblclick', resetToSystemTheme);
+    }
+    
+    // Carregar favoritos
+    setTimeout(() => {
+        loadFavorites();
+    }, 100);
+});
+
+// Atualiza quando localStorage muda
+window.addEventListener('storage', function(e) {
+    if (e.key && e.key.startsWith('favorite-')) {
+        console.log('Favorito alterado em outra aba, recarregando...');
+        setTimeout(() => {
+            reloadFavorites();
+        }, 500);
+    }
+});
+
+// Verifica periodicamente por mudanças
+let lastFavoriteCount = 0;
+setInterval(() => {
+    let localStorageFavoriteCount = 0;
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('favorite-') && localStorage.getItem(key) === 'true') {
+            localStorageFavoriteCount++;
+        }
+    }
+    
+    if (localStorageFavoriteCount !== lastFavoriteCount) {
+        console.log('Detectada mudança nos favoritos, recarregando...');
+        lastFavoriteCount = localStorageFavoriteCount;
+        setTimeout(() => {
+            reloadFavorites();
+        }, 500);
+    }
+}, 3000);
+
+// Função de debug
+function debugLocalStorage() {
+    console.log('=== DEBUG LOCALSTORAGE ===');
+    console.log('Total de itens:', localStorage.length);
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        if (key && key.startsWith('favorite-')) {
+            console.log(`${key}: ${value}`);
+        }
+    }
+    
+    console.log('Favoritos carregados na memória:', favoriteBooks.length);
+    console.log('Dark mode override:', localStorage.getItem('darkModeOverride'));
+    console.log('Sistema prefere dark:', detectSystemTheme());
+    console.log('========================');
+}
+
+window.debugLocalStorage = debugLocalStorage;
+
+// Função para carregar favoritos do localStorage
 async function loadFavorites() {
     try {
         console.log('Iniciando carregamento de favoritos...');
@@ -24,10 +184,10 @@ async function loadFavorites() {
         // Mostra indicador de carregamento
         if (booksGrid) {
             booksGrid.innerHTML = `
-                <div class="loading-state">
-                    <div class="empty-icon">⏳</div>
-                    <h3>Carregando seus livros favoritos...</h3>
-                    <p>Aguarde um momento.</p>
+                <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                    <div class="text-6xl mb-4">⏳</div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Carregando seus livros favoritos...</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Aguarde um momento.</p>
                 </div>
             `;
         }
@@ -95,7 +255,7 @@ async function fetchBookData(volumeId) {
             id: volumeId,
             title: info.title || "Título não disponível",
             author: info.authors?.join(", ") || "Autor desconhecido",
-            cover: info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || "https://via.placeholder.com/150x220?text=Sem+Capa",
+            cover: info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQjJ5mHArWKZohio_f2pwq1MmrqC0_T3TYug&s",
             description: info.description || "Descrição indisponível",
             publisher: info.publisher || "Desconhecida",
             publishedDate: info.publishedDate || "Desconhecida",
@@ -125,7 +285,7 @@ function highlightText(text, searchTerm) {
     if (!searchTerm) return text;
     
     const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return text.replace(regex, '<span class="highlight-text">$1</span>');
+    return text.replace(regex, '<span class="bg-yellow-200 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 px-1 rounded font-semibold">$1</span>');
 }
 
 // Função para filtrar livros
@@ -153,13 +313,13 @@ function updateSearchStatus() {
     if (!searchStatus) return;
     
     if (!isSearchActive) {
-        searchStatus.classList.remove('active');
-        if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+        searchStatus.classList.add('hidden');
+        if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
         return;
     }
 
-    if (clearSearchBtn) clearSearchBtn.style.display = 'block';
-    searchStatus.classList.add('active');
+    if (clearSearchBtn) clearSearchBtn.classList.remove('hidden');
+    searchStatus.classList.remove('hidden');
     
     if (filteredBooks.length === 0) {
         searchStatus.innerHTML = `Nenhum resultado encontrado para "<strong>${searchInput.value}</strong>"`;
@@ -182,10 +342,10 @@ function renderBooks() {
     
     if (favoriteBooks.length === 0) {
         booksGrid.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">📚</div>
-                <h3>Nenhum livro favorito ainda</h3>
-                <p>Explore nossa coleção e adicione seus livros favoritos!</p>
+            <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                <div class="text-6xl mb-4">📚</div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Nenhum livro favorito ainda</h3>
+                <p class="text-gray-600 dark:text-gray-400">Explore nossa coleção e adicione seus livros favoritos!</p>
             </div>
         `;
         return;
@@ -193,10 +353,10 @@ function renderBooks() {
 
     if (isSearchActive && filteredBooks.length === 0) {
         booksGrid.innerHTML = `
-            <div class="no-results">
-                <div class="empty-icon">🔍</div>
-                <h3>Nenhum resultado encontrado</h3>
-                <p>Tente buscar por outro termo ou limpe a busca para ver todos os livros.</p>
+            <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                <div class="text-6xl mb-4">🔍</div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Nenhum resultado encontrado</h3>
+                <p class="text-gray-600 dark:text-gray-400">Tente buscar por outro termo ou limpe a busca para ver todos os livros.</p>
             </div>
         `;
         return;
@@ -210,13 +370,19 @@ function renderBooks() {
         const highlightedAuthor = isSearchActive ? highlightText(book.author, searchInput?.value || '') : book.author;
         
         return `
-            <div class="book-card ${isSearchActive ? 'highlight' : ''}" onclick="openBook(${originalIndex})">
-                <img src="${book.cover}" alt="${book.title}" class="book-cover-img" style="width: 100px; height: 150px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQjJ5mHArWKZohio_f2pwq1MmrqC0_T3TYug&s'">
-                <h3 class="book-title">${highlightedTitle}</h3>
-                <p class="book-author">por ${highlightedAuthor}</p>
-                <div class="book-actions">
-                    <button class="action-btn" onclick="event.stopPropagation(); viewBook(${originalIndex})">Ver detalhes</button>
-                    <button class="action-btn remove-btn" onclick="event.stopPropagation(); removeBook(${originalIndex})">Remover</button>
+            <div class="group bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer ${isSearchActive ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}" onclick="openBook(${originalIndex})">
+                <div class="aspect-[3/4] bg-gray-200 dark:bg-gray-600 rounded-lg mb-3 overflow-hidden">
+                    <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200" onerror="this.src='https://via.placeholder.com/150x220/6B7280/FFFFFF?text=Sem+Capa'">
+                </div>
+                <h3 class="font-semibold text-gray-900 dark:text-white text-sm line-clamp-2 mb-1">${highlightedTitle}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-xs mb-3">por ${highlightedAuthor}</p>
+                <div class="flex gap-2">
+                    <button class="flex-1 px-3 py-1.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded text-xs font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors" onclick="event.stopPropagation(); viewBook(${originalIndex})">
+                        Ver detalhes
+                    </button>
+                    <button class="px-3 py-1.5 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded text-xs font-medium hover:bg-red-200 dark:hover:bg-red-800 transition-colors" onclick="event.stopPropagation(); removeBook(${originalIndex})">
+                        Remover
+                    </button>
                 </div>
             </div>
         `;
@@ -244,14 +410,14 @@ function clearSearch() {
     currentSearchTerm = '';
     isSearchActive = false;
     filteredBooks = [...favoriteBooks];
-    if (clearSearchBtn) clearSearchBtn.style.display = 'none';
-    if (searchStatus) searchStatus.classList.remove('active');
+    if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
+    if (searchStatus) searchStatus.classList.add('hidden');
     renderBooks();
     updateCount();
     if (searchInput) searchInput.focus();
 }
 
-// Event listeners para busca (com verificação de existência dos elementos)
+// Event listeners para busca
 if (searchInput) {
     searchInput.addEventListener('input', function() {
         filterBooks(this.value);
@@ -267,7 +433,6 @@ if (searchInput) {
         }
     });
 
-    // Atalho para limpar busca com Escape
     searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             clearSearch();
@@ -292,7 +457,6 @@ function openBook(index) {
     const book = favoriteBooks[index];
     if (!book) return;
     
-    // Redireciona para a página de detalhes do livro
     window.location.href = `index.html?id=${book.id}`;
 }
 
@@ -300,7 +464,6 @@ function viewBook(index) {
     const book = favoriteBooks[index];
     if (!book) return;
     
-    // Redireciona para a página de detalhes do livro
     window.location.href = `../TelaIndividual/index.html?id=${book.id}`;
 }
 
@@ -309,13 +472,9 @@ function removeBook(index) {
     if (!book) return;
     
     if (confirm(`Remover "${book.title}" dos favoritos?`)) {
-        // Remove do localStorage usando o mesmo padrão do Código 1
         localStorage.removeItem(`favorite-${book.id}`);
-        
-        // Remove do array local
         favoriteBooks.splice(index, 1);
         
-        // Atualizar busca se estiver ativa
         if (isSearchActive) {
             filterBooks(searchInput?.value || '');
         } else {
@@ -342,7 +501,6 @@ if (sortBtn) {
             this.textContent = 'Ordenar por título ↓';
         }
         
-        // Reaplica filtro se busca estiver ativa
         if (isSearchActive) {
             filterBooks(searchInput?.value || '');
         } else {
@@ -353,16 +511,14 @@ if (sortBtn) {
     });
 }
 
-// Função pública para adicionar livro aos favoritos (compatível com outras páginas)
+// Funções públicas
 function addToFavorites(book) {
-    // Verifica se o livro já está nos favoritos
     const exists = favoriteBooks.some(fav => 
         fav.id === book.id || (fav.title === book.title && fav.author === book.author)
     );
     
     if (!exists) {
         favoriteBooks.push(book);
-        // Salva no localStorage usando o padrão do Código 1
         localStorage.setItem(`favorite-${book.id}`, 'true');
         console.log('Livro adicionado aos favoritos:', book);
         
@@ -379,89 +535,24 @@ function addToFavorites(book) {
     return false;
 }
 
-// Função para verificar se um livro está nos favoritos
 function isInFavorites(book) {
     return favoriteBooks.some(fav => 
         fav.id === book.id || (fav.title === book.title && fav.author === book.author)
     );
 }
 
-// Função para obter todos os favoritos
 function getFavorites() {
     return [...favoriteBooks];
 }
 
-// Função para recarregar favoritos (útil quando chamada de outras páginas)
 async function reloadFavorites() {
     console.log('Recarregando favoritos...');
     await loadFavorites();
 }
 
-// Torna as funções disponíveis globalmente para outras páginas
+// Torna as funções disponíveis globalmente
 window.addToFavorites = addToFavorites;
 window.isInFavorites = isInFavorites;
 window.getFavorites = getFavorites;
 window.reloadFavorites = reloadFavorites;
-
-// Inicialização quando a página carrega
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM carregado, iniciando aplicação...');
-    
-    // Pequeno delay para garantir que todos os elementos estão prontos
-    setTimeout(() => {
-        loadFavorites();
-    }, 100);
-});
-
-// Atualiza a página quando o localStorage muda (ex: em outra aba)
-window.addEventListener('storage', function(e) {
-    if (e.key && e.key.startsWith('favorite-')) {
-        console.log('Favorito alterado em outra aba, recarregando...');
-        setTimeout(() => {
-            reloadFavorites();
-        }, 500);
-    }
-});
-
-// Verifica periodicamente por mudanças nos favoritos
-let lastFavoriteCount = 0;
-setInterval(() => {
-    let localStorageFavoriteCount = 0;
-    
-    // Conta quantos favoritos existem no localStorage
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('favorite-') && localStorage.getItem(key) === 'true') {
-            localStorageFavoriteCount++;
-        }
-    }
-    
-    // Se a quantidade for diferente da última verificação, recarrega
-    if (localStorageFavoriteCount !== lastFavoriteCount) {
-        console.log('Detectada mudança nos favoritos, recarregando...');
-        lastFavoriteCount = localStorageFavoriteCount;
-        setTimeout(() => {
-            reloadFavorites();
-        }, 500);
-    }
-}, 3000); // Verifica a cada 3 segundos
-
-// Função de debug para verificar localStorage
-function debugLocalStorage() {
-    console.log('=== DEBUG LOCALSTORAGE ===');
-    console.log('Total de itens:', localStorage.length);
-    
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const value = localStorage.getItem(key);
-        if (key && key.startsWith('favorite-')) {
-            console.log(`${key}: ${value}`);
-        }
-    }
-    
-    console.log('Favoritos carregados na memória:', favoriteBooks.length);
-    console.log('========================');
-}
-
-// Torna a função de debug disponível globalmente
-window.debugLocalStorage = debugLocalStorage;
+window.resetToSystemTheme = resetToSystemTheme; // Função extra para debug
