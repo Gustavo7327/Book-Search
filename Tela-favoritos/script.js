@@ -116,10 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
         darkModeToggle.addEventListener('dblclick', resetToSystemTheme);
     }
     
-    // Carregar favoritos
-    setTimeout(() => {
-        loadFavorites();
-    }, 100);
 });
 
 // Atualiza quando localStorage muda
@@ -280,13 +276,6 @@ async function fetchBookData(volumeId) {
     }
 }
 
-// Função para destacar texto de busca
-function highlightText(text, searchTerm) {
-    if (!searchTerm) return text;
-    
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return text.replace(regex, '<span class="bg-yellow-200 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 px-1 rounded font-semibold">$1</span>');
-}
 
 // Função para filtrar livros
 function filterBooks(searchTerm) {
@@ -370,7 +359,7 @@ function renderBooks() {
         const highlightedAuthor = isSearchActive ? highlightText(book.author, searchInput?.value || '') : book.author;
         
         return `
-            <div class="group bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer ${isSearchActive ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}" onclick="openBook(${originalIndex})">
+            <div class="group bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer ${isSearchActive ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}" ">
                 <div class="aspect-[3/4] bg-gray-200 dark:bg-gray-600 rounded-lg mb-3 overflow-hidden">
                     <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200" onerror="this.src='https://via.placeholder.com/150x220/6B7280/FFFFFF?text=Sem+Capa'">
                 </div>
@@ -452,13 +441,6 @@ if (clearSearchBtn) {
     clearSearchBtn.addEventListener('click', clearSearch);
 }
 
-// Funções dos livros
-function openBook(index) {
-    const book = favoriteBooks[index];
-    if (!book) return;
-    
-    window.location.href = `index.html?id=${book.id}`;
-}
 
 function viewBook(index) {
     const book = favoriteBooks[index];
@@ -556,3 +538,34 @@ window.isInFavorites = isInFavorites;
 window.getFavorites = getFavorites;
 window.reloadFavorites = reloadFavorites;
 window.resetToSystemTheme = resetToSystemTheme; // Função extra para debug
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadFavorites(); 
+});
+
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+function highlightText(text, searchTerm) {
+    const safeTerm = escapeHtml(searchTerm);
+    const safeText = escapeHtml(safeTerm);
+    const regex = new RegExp(`(${safeText})`, 'gi');
+    return text.replace(regex, '<span class="bg-yellow-200 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 px-1 rounded font-semibold">$1</span>');
+}
+
+document.querySelectorAll('[data-book-index]').forEach(el => {
+    el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = el.getAttribute('data-book-index');
+        viewBook(index);
+    });
+});
